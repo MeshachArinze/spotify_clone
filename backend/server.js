@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const lyricsFinder = require("lyrics-finder");
 const SpotifyWebApi = require("spotify-web-api-node");
 
+const port = process.env.port || 3001;
+
 const app = express();
 
 app.use(cors());
@@ -14,9 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
   const spotifyApi = new SpotifyWebApi({
+    redirectUri: process.env.REDIRECT_URI,
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: REDIRECT_URI,
     refreshToken,
   });
 
@@ -63,4 +65,4 @@ app.get("/lyrics", async (req, res) => {
   res.json({ lyrics });
 });
 
-app.listen(3001);
+app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
